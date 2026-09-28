@@ -1,0 +1,25 @@
+{
+  "info": {
+    "_postman_id": "a4722433-a260-4f2b-9f13-c7b273ca30b9",
+    "name": "ContractWatch API",
+    "description": "Local ContractWatch REST API examples. Start the Spring Boot application and use baseUrl http://localhost:8080.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:8080" }, { "key": "contractId", "value": "1" }],
+  "item": [
+    { "name": "Dashboard summary", "request": { "method": "GET", "url": "{{baseUrl}}/api/dashboard/summary" } },
+    { "name": "List contracts", "request": { "method": "GET", "url": "{{baseUrl}}/api/contracts" } },
+    { "name": "Search and filter contracts", "request": { "method": "GET", "url": "{{baseUrl}}/api/contracts?q=cloud&attention=due-soon" } },
+    { "name": "Get contract", "request": { "method": "GET", "url": "{{baseUrl}}/api/contracts/{{contractId}}" } },
+    {
+      "name": "Create contract",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["if (pm.response.code === 201) { pm.collectionVariables.set('contractId', pm.response.json().id); }"] } }],
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"contractName\": \"ABC Cloud Services\",\n  \"vendor\": \"ABC Cloud\",\n  \"vendorEmail\": \"renewals@example.com\",\n  \"amount\": 120000,\n  \"currency\": \"INR\",\n  \"startDate\": \"2026-01-01\",\n  \"endDate\": \"2026-12-31\",\n  \"renewalNoticeDays\": 30,\n  \"status\": \"ACTIVE\",\n  \"notes\": \"Primary cloud hosting agreement\",\n  \"discountPercent\": 15,\n  \"discountAmount\": 18000,\n  \"discountDeadline\": \"2026-11-30\"\n}" }, "url": "{{baseUrl}}/api/contracts" }
+    },
+    { "name": "Update contract", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"contractName\": \"ABC Cloud Services\",\n  \"vendor\": \"ABC Cloud\",\n  \"amount\": 108000,\n  \"currency\": \"INR\",\n  \"startDate\": \"2026-01-01\",\n  \"endDate\": \"2026-12-31\",\n  \"renewalNoticeDays\": 30,\n  \"status\": \"PENDING\"\n}" }, "url": "{{baseUrl}}/api/contracts/{{contractId}}" } },
+    { "name": "Mark renewal pending", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"status\": \"PENDING\"\n}" }, "url": "{{baseUrl}}/api/contracts/{{contractId}}/status" } },
+    { "name": "Renew contract", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"newEndDate\": \"2027-12-31\",\n  \"newAmount\": 108000,\n  \"discountPercent\": 10\n}" }, "url": "{{baseUrl}}/api/contracts/{{contractId}}/renew" } },
+    { "name": "List discounts", "request": { "method": "GET", "url": "{{baseUrl}}/api/discounts" } },
+    { "name": "Delete contract", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/contracts/{{contractId}}" } }
+  ]
+}
